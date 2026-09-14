@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    /* Palette variables */
+    --background: 60 11% 99%;         /* #FCFCFB Blanco cálido */
+    --foreground: 221 64% 22%;         /* #142B5C Azul Codeah */
+
+    --card: 0 0% 100%;
+    --card-foreground: 221 64% 22%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 221 64% 22%;
+
+    --primary: 221 64% 22%;            /* #142B5C Azul Codeah */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 216 43% 97%;          /* #F4F7FB Gris azulado suave */
+    --secondary-foreground: 221 64% 22%;
+
+    --muted: 216 43% 95%;
+    --muted-foreground: 217 18% 39%;   /* #526075 Gris pizarra */
+
+    --accent: 40 65% 55%;              /* #D9A441 Dorado Codeah */
+    --accent-foreground: 221 69% 14%;   /* #0B1B3D */
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 217 30% 90%;             /* #E4EAF3 */
+    --input: 217 30% 90%;
+    --ring: 221 64% 22%;
+
+    --radius: 1rem;                    /* 16px border-radius */
+
+    /* Custom Brand Colors */
+    --azul-codeah: #142B5C;
+    --azul-profundo: #0B1B3D;
+    --dorado-codeah: #D9A441;
+    --arena-dorada: #F4D48B;
+    --blanco-calido: #FCFCFB;
+    --gris-azulado: #F4F7FB;
+    --gris-pizarra: #526075;
+    --verde-exito: #14966B;
+  }
+}
+
+@theme {
+  --color-azul-codeah: var(--azul-codeah);
+  --color-azul-profundo: var(--azul-profundo);
+  --color-dorado-codeah: var(--dorado-codeah);
+  --color-arena-dorada: var(--arena-dorada);
+  --color-blanco-calido: var(--blanco-calido);
+  --color-gris-azulado: var(--gris-azulado);
+  --color-gris-pizarra: var(--gris-pizarra);
+  --color-verde-exito: var(--verde-exito);
+  --font-sora: var(--font-sora), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
+}
+
+body {
+  background-color: var(--blanco-calido);
+  color: var(--azul-codeah);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sora), system-ui, sans-serif;
+}
+
+/* Glassmorphic light navbar styling */
+.glass-header {
+  background: rgba(252, 252, 251, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(228, 234, 243, 0.7);
+}
+
+/* Subtly animated gradient text accent */
+.text-gold-accent {
+  color: var(--dorado-codeah);
+}
+
+.bg-gold-accent {
+  background-color: var(--dorado-codeah);
+}
+
+.shadow-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shadow-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px -10px rgba(20, 43, 92, 0.12);
+}
+
+/* Subtle float animation for graphics */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+/* Subtle pulse glow for status indicators */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
