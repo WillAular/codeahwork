@@ -51,6 +51,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { MainLayoutWrapper } from "@/components/layout/MainLayoutWrapper";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -62,11 +64,7 @@ export default function RootLayout({
         <meta name="color-scheme" content="light" />
       </head>
       <body className="bg-[var(--blanco-calido)] text-[var(--azul-codeah)] antialiased min-h-screen flex flex-col justify-between">
-        <ScrollProgressBar />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <StickyMobileCTA />
-        <Footer />
+        <MainLayoutWrapper>{children}</MainLayoutWrapper>
       </body>
     </html>
   );

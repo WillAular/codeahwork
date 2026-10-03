@@ -83,15 +83,12 @@ export function Navbar() {
 
             {/* Desktop Action CTAs */}
             <div className="hidden md:flex items-center gap-4">
-              <Button
-                variant="gold"
-                size="default"
-                onClick={() => setContactModalOpen(true)}
-                className="group"
-              >
-                <span>Hablemos de tu proyecto</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Button>
+              <a href="#contacto">
+                <Button variant="gold" size="default" className="group cursor-pointer">
+                  <span>Hablemos de tu proyecto</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </a>
             </div>
 
             {/* Mobile Hamburger Button */}
@@ -139,17 +136,19 @@ export function Navbar() {
               </a>
             </nav>
             <div className="pt-2">
-              <Button
-                variant="gold"
-                size="lg"
-                className="w-full justify-center"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setContactModalOpen(true);
-                }}
+              <a
+                href="#contacto"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block w-full"
               >
-                Hablemos de tu proyecto
-              </Button>
+                <Button
+                  variant="gold"
+                  size="lg"
+                  className="w-full justify-center"
+                >
+                  Hablemos de tu proyecto
+                </Button>
+              </a>
             </div>
           </div>
         )}

@@ -4,6 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp, Mail, MapPin, Phone } from "lucide-react";
+import { IconBrandLinkedin, IconBrandInstagram } from "@tabler/icons-react";
 
 export function Footer() {
   const scrollToTop = () => {
@@ -28,6 +29,29 @@ export function Footer() {
             <p className="text-sm text-slate-300 max-w-sm leading-relaxed">
               Convertimos problemas operativos en herramientas digitales claras, conectadas y útiles. Soluciones a medida para que tu negocio venda y se organice mejor.
             </p>
+            {/* Social Media Links */}
+            <div className="pt-2 flex items-center gap-3">
+              <a
+                href="https://www.linkedin.com/in/codeah-sistemas-783b16305/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-300 hover:text-white hover:bg-white/10 hover:border-amber-400/40 transition-all"
+                aria-label="LinkedIn de Codeah"
+              >
+                <IconBrandLinkedin size={16} className="text-amber-400" />
+                <span>LinkedIn</span>
+              </a>
+              <a
+                href="https://www.instagram.com/codeahsistemas/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-300 hover:text-white hover:bg-white/10 hover:border-amber-400/40 transition-all"
+                aria-label="Instagram de Codeah"
+              >
+                <IconBrandInstagram size={16} className="text-amber-400" />
+                <span>Instagram</span>
+              </a>
+            </div>
           </div>
 
           {/* Column 2: Navigation Links */}
