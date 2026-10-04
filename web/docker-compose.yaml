@@ -4,21 +4,14 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.codeah.com/api}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.codeah.com.ar/api}
     image: codeah-web:latest
     container_name: codeah_web
     restart: unless-stopped
     env_file:
       - .env
-    environment:
-      - NODE_ENV=${NODE_ENV:-production}
-      - PORT=${PORT:-3000}
-      - HOSTNAME=0.0.0.0
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://api.codeah.com/api}
-      - VIRTUAL_HOST=${DOMAIN:-codeah.com},www.${DOMAIN:-codeah.com}
-      - LETSENCRYPT_HOST=${DOMAIN:-codeah.com},www.${DOMAIN:-codeah.com}
     ports:
-      - "${PORT:-3000}:${PORT:-3000}"
+      - "3000:3000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.codeah-web.rule=Host(`${DOMAIN:-codeah.com}`) || Host(`www.${DOMAIN:-codeah.com}`)"
