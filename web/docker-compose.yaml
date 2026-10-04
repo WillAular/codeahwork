@@ -12,13 +12,6 @@ services:
       - .env
     ports:
       - "3000:3000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.codeah-web.rule=Host(`${DOMAIN:-codeah.com}`) || Host(`www.${DOMAIN:-codeah.com}`)"
-      - "traefik.http.routers.codeah-web.entrypoints=websecure"
-      - "traefik.http.routers.codeah-web.tls=true"
-      - "traefik.http.routers.codeah-web.tls.certresolver=letsencrypt"
-      - "traefik.http.services.codeah-web.loadbalancer.server.port=${PORT:-3000}"
     deploy:
       resources:
         limits:
