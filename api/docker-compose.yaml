@@ -9,10 +9,10 @@ services:
     env_file:
       - .env
     ports:
-      - "${PORT:-5003}:${PORT:-5003}"
+      - "5003:5003"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.codeah-api.rule=Host(`${DOMAIN:-api.codeah.com}`)"
+      - "traefik.http.routers.codeah-api.rule=Host(`${DOMAIN:-api.codeah.com.ar}`)"
       - "traefik.http.routers.codeah-api.entrypoints=websecure"
       - "traefik.http.routers.codeah-api.tls=true"
       - "traefik.http.routers.codeah-api.tls.certresolver=letsencrypt"
