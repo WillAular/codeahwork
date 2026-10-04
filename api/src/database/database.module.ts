@@ -10,18 +10,33 @@ import { Lead } from '../lead-management/models/lead.model.js';
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        dialect: 'mysql',
-        host: configService.get<string>('DB_HOST', '127.0.0.1'),
-        port: configService.get<number>('DB_PORT', 3306),
-        username: configService.get<string>('DB_USERNAME', 'codeah_user'),
-        password: configService.get<string>('DB_PASSWORD', 'codeah_password'),
-        database: configService.get<string>('DB_NAME', 'codeah_db'),
-        models: [User, Project, Lead],
-        autoLoadModels: true,
-        synchronize: true,
-        logging: configService.get<string>('NODE_ENV') === 'development' ? console.log : false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const dialect = (configService.get<string>('DB_DIALECT') || (configService.get('DB_HOST') ? 'mysql' : 'sqlite')) as any;
+
+        if (dialect === 'sqlite') {
+          return {
+            dialect: 'sqlite',
+            storage: configService.get<string>('DB_STORAGE', './codeah.sqlite'),
+            models: [User, Project, Lead],
+            autoLoadModels: true,
+            synchronize: true,
+            logging: false,
+          };
+        }
+
+        return {
+          dialect: 'mysql',
+          host: configService.get<string>('DB_HOST', '127.0.0.1'),
+          port: Number(configService.get('DB_PORT', 33066)),
+          username: configService.get<string>('DB_USERNAME', 'root'),
+          password: configService.get<string>('DB_PASSWORD', 'root'),
+          database: configService.get<string>('DB_NAME', 'codeah'),
+          models: [User, Project, Lead],
+          autoLoadModels: true,
+          synchronize: true,
+          logging: configService.get<string>('NODE_ENV') === 'development' ? console.log : false,
+        };
+      },
     }),
   ],
 })

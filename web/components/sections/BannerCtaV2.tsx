@@ -14,16 +14,21 @@ import {
   IconBrandInstagram,
   IconMessage,
   IconSparkles,
+  IconMail,
+  IconBrandWhatsapp,
 } from "@tabler/icons-react";
+import { apiRequest } from "@/lib/api-client";
 import { FadeIn } from "@/components/ui/fade-in";
 
 export function BannerCtaV2() {
   const [submitted, setSubmitted] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [formData, setFormData] = React.useState({
     name: "",
     company: "",
-    contact: "",
+    email: "",
+    phone: "",
     service: "General",
     message: "",
   });
@@ -31,37 +36,31 @@ export function BannerCtaV2() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage(null);
 
-    const isEmail = formData.contact.includes("@");
     const payload = {
       name: formData.name,
       company: formData.company || undefined,
-      email: isEmail
-        ? formData.contact
-        : `${formData.name.toLowerCase().replace(/\s+/g, "")}@prospecto.com`,
-      phone: isEmail ? "+54 9 11 0000 0000" : formData.contact,
-      serviceRequested: formData.service,
+      email: formData.email,
+      phone: formData.phone,
+      serviceRequested: formData.service || "General",
       message: formData.message,
       source: "web_inline_contact_form",
     };
 
     try {
-      const apiUrl =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-      const response = await fetch(`${apiUrl}/leads`, {
+      await apiRequest("/leads", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
-      if (!response.ok) {
-        console.warn("API submission returned status:", response.status);
-      }
-    } catch (err) {
-      console.error("Error submitting lead to API:", err);
+      setSubmitted(true);
+    } catch (err: any) {
+      console.error("Error al guardar lead:", err);
+      setErrorMessage(
+        err.message || "Ocurrió un error al enviar tu propuesta. Intentá nuevamente."
+      );
     } finally {
       setLoading(false);
-      setSubmitted(true);
     }
   };
 
@@ -69,10 +68,12 @@ export function BannerCtaV2() {
     setFormData({
       name: "",
       company: "",
-      contact: "",
+      email: "",
+      phone: "",
       service: "General",
       message: "",
     });
+    setErrorMessage(null);
     setSubmitted(false);
   };
 
@@ -119,30 +120,56 @@ export function BannerCtaV2() {
                   </div>
                 </div>
 
-                {/* Social Networks Box */}
-                <div className="pt-6 border-t border-white/10 space-y-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                    Seguinos en nuestras redes:
-                  </span>
-                  <div className="flex flex-wrap gap-3">
-                    <a
-                      href="https://www.linkedin.com/in/codeah-sistemas-783b16305/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/15 text-xs sm:text-sm font-medium text-white hover:bg-white/20 hover:border-amber-400/40 transition-all shadow-sm"
-                    >
-                      <IconBrandLinkedin size={18} className="text-amber-400" />
-                      <span>LinkedIn</span>
-                    </a>
-                    <a
-                      href="https://www.instagram.com/codeahsistemas/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/15 text-xs sm:text-sm font-medium text-white hover:bg-white/20 hover:border-amber-400/40 transition-all shadow-sm"
-                    >
-                      <IconBrandInstagram size={18} className="text-amber-400" />
-                      <span>Instagram</span>
-                    </a>
+                {/* Direct Contact & Social Networks Box */}
+                <div className="pt-6 border-t border-white/10 space-y-4">
+                  <div className="space-y-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                      Contacto directo:
+                    </span>
+                    <div className="flex flex-col gap-2 text-xs sm:text-sm">
+                      <a
+                        href="mailto:codeahsistemas@gmail.com"
+                        className="inline-flex items-center gap-2.5 text-slate-200 hover:text-amber-300 transition-colors"
+                      >
+                        <IconMail size={18} className="text-amber-400 shrink-0" />
+                        <span>codeahsistemas@gmail.com</span>
+                      </a>
+                      <a
+                        href="https://wa.me/5491136490804"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2.5 text-slate-200 hover:text-emerald-300 transition-colors font-medium"
+                      >
+                        <IconBrandWhatsapp size={18} className="text-emerald-400 shrink-0" />
+                        <span>+54 9 11 3649-0804</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 pt-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                      Redes sociales:
+                    </span>
+                    <div className="flex flex-wrap gap-3">
+                      <a
+                        href="https://www.linkedin.com/in/codeah-sistemas-783b16305/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 border border-white/15 text-xs font-medium text-white hover:bg-white/20 hover:border-amber-400/40 transition-all shadow-sm"
+                      >
+                        <IconBrandLinkedin size={16} className="text-amber-400" />
+                        <span>LinkedIn</span>
+                      </a>
+                      <a
+                        href="https://www.instagram.com/codeahsistemas/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 border border-white/15 text-xs font-medium text-white hover:bg-white/20 hover:border-amber-400/40 transition-all shadow-sm"
+                      >
+                        <IconBrandInstagram size={16} className="text-amber-400" />
+                        <span>Instagram</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -151,6 +178,12 @@ export function BannerCtaV2() {
               <div className="lg:col-span-7 bg-white rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-10 text-slate-900 shadow-xl border border-slate-100">
                 {!submitted ? (
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    {errorMessage && (
+                      <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+                        {errorMessage}
+                      </div>
+                    )}
+
                     <div className="space-y-1 mb-2">
                       <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--azul-codeah)]">
                         <IconSparkles size={16} className="text-[var(--dorado-codeah)]" />
@@ -195,37 +228,53 @@ export function BannerCtaV2() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-wider text-[var(--azul-codeah)]">
-                          WhatsApp o Email *
+                          Email *
                         </label>
                         <Input
                           required
-                          placeholder="+54 9 11 ... o contacto@empresa.com"
-                          value={formData.contact}
+                          type="email"
+                          placeholder="contacto@empresa.com"
+                          value={formData.email}
                           onChange={(e) =>
-                            setFormData({ ...formData, contact: e.target.value })
+                            setFormData({ ...formData, email: e.target.value })
                           }
                         />
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-wider text-[var(--azul-codeah)]">
-                          Área de interés
+                          WhatsApp / Teléfono *
                         </label>
-                        <select
-                          className="flex h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-[var(--azul-codeah)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--azul-codeah)] cursor-pointer"
-                          value={formData.service}
+                        <Input
+                          required
+                          type="tel"
+                          placeholder="+54 9 11 0000 0000"
+                          value={formData.phone}
                           onChange={(e) =>
-                            setFormData({ ...formData, service: e.target.value })
+                            setFormData({ ...formData, phone: e.target.value })
                           }
-                        >
-                          <option value="Integraciones">Integraciones y automatizaciones</option>
-                          <option value="Desarrollo Web">Desarrollo web y e-commerce</option>
-                          <option value="Facturación">Sistemas de facturación y gestión</option>
-                          <option value="A Medida">Sistema a medida</option>
-                          <option value="IA Aplicada">Inteligencia artificial aplicada</option>
-                          <option value="Mantenimiento">Mantenimiento y evolución</option>
-                          <option value="General">Otro / Asesoramiento general</option>
-                        </select>
+                        />
                       </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold uppercase tracking-wider text-[var(--azul-codeah)]">
+                        Área de interés
+                      </label>
+                      <select
+                        className="flex h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-[var(--azul-codeah)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--azul-codeah)] cursor-pointer"
+                        value={formData.service}
+                        onChange={(e) =>
+                          setFormData({ ...formData, service: e.target.value })
+                        }
+                      >
+                        <option value="Integraciones">Integraciones y automatizaciones</option>
+                        <option value="Desarrollo Web">Desarrollo web y e-commerce</option>
+                        <option value="Facturación">Sistemas de facturación y gestión</option>
+                        <option value="A Medida">Sistema a medida</option>
+                        <option value="IA Aplicada">Inteligencia artificial aplicada</option>
+                        <option value="Mantenimiento">Mantenimiento y evolución</option>
+                        <option value="General">Otro / Asesoramiento general</option>
+                      </select>
                     </div>
 
                     <div className="space-y-1.5">

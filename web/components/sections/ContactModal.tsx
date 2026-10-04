@@ -14,6 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Send, Sparkles, ShieldCheck } from "lucide-react";
 
+import { apiRequest } from "@/lib/api-client";
+
 interface ContactModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -27,10 +29,12 @@ export function ContactModal({
 }: ContactModalProps) {
   const [submitted, setSubmitted] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [formData, setFormData] = React.useState({
     name: "",
     company: "",
-    contact: "",
+    email: "",
+    phone: "",
     service: defaultService,
     message: "",
   });
@@ -44,35 +48,31 @@ export function ContactModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage(null);
 
-    // Extract email vs phone from single contact field if needed
-    const isEmail = formData.contact.includes("@");
     const payload = {
       name: formData.name,
       company: formData.company || undefined,
-      email: isEmail ? formData.contact : `${formData.name.toLowerCase().replace(/\s+/g, "")}@prospecto.com`,
-      phone: isEmail ? "+54 9 11 0000 0000" : formData.contact,
-      serviceRequested: formData.service,
+      email: formData.email,
+      phone: formData.phone,
+      serviceRequested: formData.service || "General",
       message: formData.message,
       source: "web_contact_modal",
     };
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-      const response = await fetch(`${apiUrl}/leads`, {
+      await apiRequest("/leads", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
-      if (!response.ok) {
-        console.warn("API submission returned status:", response.status);
-      }
-    } catch (err) {
-      console.error("Error submitting lead to API:", err);
+      setSubmitted(true);
+    } catch (err: any) {
+      console.error("Error al registrar lead:", err);
+      setErrorMessage(
+        err.message || "Ocurrió un error al enviar tu consulta. Por favor, intentá nuevamente."
+      );
     } finally {
       setLoading(false);
-      setSubmitted(true);
     }
   };
 
@@ -101,6 +101,12 @@ export function ContactModal({
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+              {errorMessage && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+                  {errorMessage}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-[var(--azul-codeah)]">
@@ -132,37 +138,53 @@ export function ContactModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-[var(--azul-codeah)]">
-                    WhatsApp o Email *
+                    Email *
                   </label>
                   <Input
                     required
-                    placeholder="+54 9 11 ... o correo@empresa.com"
-                    value={formData.contact}
+                    type="email"
+                    placeholder="correo@empresa.com"
+                    value={formData.email}
                     onChange={(e) =>
-                      setFormData({ ...formData, contact: e.target.value })
+                      setFormData({ ...formData, email: e.target.value })
                     }
                   />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-[var(--azul-codeah)]">
-                    Área de interés
+                    WhatsApp / Teléfono *
                   </label>
-                  <select
-                    className="flex h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-[var(--azul-codeah)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--azul-codeah)] cursor-pointer"
-                    value={formData.service}
+                  <Input
+                    required
+                    type="tel"
+                    placeholder="+54 9 11 0000 0000"
+                    value={formData.phone}
                     onChange={(e) =>
-                      setFormData({ ...formData, service: e.target.value })
+                      setFormData({ ...formData, phone: e.target.value })
                     }
-                  >
-                    <option value="Integraciones">Integraciones y automatizaciones</option>
-                    <option value="Desarrollo Web">Desarrollo web y e-commerce</option>
-                    <option value="Facturación">Sistemas de facturación y gestión</option>
-                    <option value="A Medida">Sistema a medida</option>
-                    <option value="IA Aplicada">Inteligencia artificial aplicada</option>
-                    <option value="Mantenimiento">Mantenimiento y evolución</option>
-                    <option value="General">Otro / Asesoramiento general</option>
-                  </select>
+                  />
                 </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-[var(--azul-codeah)]">
+                  Área de interés
+                </label>
+                <select
+                  className="flex h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-[var(--azul-codeah)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--azul-codeah)] cursor-pointer"
+                  value={formData.service}
+                  onChange={(e) =>
+                    setFormData({ ...formData, service: e.target.value })
+                  }
+                >
+                  <option value="Integraciones">Integraciones y automatizaciones</option>
+                  <option value="Desarrollo Web">Desarrollo web y e-commerce</option>
+                  <option value="Facturación">Sistemas de facturación y gestión</option>
+                  <option value="A Medida">Sistema a medida</option>
+                  <option value="IA Aplicada">Inteligencia artificial aplicada</option>
+                  <option value="Mantenimiento">Mantenimiento y evolución</option>
+                  <option value="General">Otro / Asesoramiento general</option>
+                </select>
               </div>
 
               <div className="space-y-1.5">
@@ -196,9 +218,20 @@ export function ContactModal({
                     </>
                   )}
                 </Button>
-                <div className="flex items-center justify-center gap-2 text-xs text-[var(--gris-pizarra)]">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>Sin compromisos comerciales. Respuesta rápida garantizada.</span>
+                <div className="flex flex-col items-center justify-center gap-1.5 text-xs text-[var(--gris-pizarra)]">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    <span>Sin compromisos comerciales. Respuesta rápida garantizada.</span>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 pt-1 text-[11px] text-slate-600">
+                    <a href="mailto:codeahsistemas@gmail.com" className="hover:text-[var(--azul-codeah)] underline">
+                      codeahsistemas@gmail.com
+                    </a>
+                    <span>•</span>
+                    <a href="https://wa.me/5491136490804" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--azul-codeah)] underline">
+                      +54 9 11 3649-0804
+                    </a>
+                  </div>
                 </div>
               </div>
             </form>

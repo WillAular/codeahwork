@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { StickyMobileCTA } from "@/components/layout/StickyMobileCTA";
+import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { ScrollProgressBar } from "@/components/ui/fade-in";
 import { AuthProvider } from "@/context/AuthContext";
 
@@ -27,6 +28,7 @@ export function MainLayoutWrapper({ children }: { children: React.ReactNode }) {
       <ScrollProgressBar />
       <Navbar />
       <main className="flex-1">{children}</main>
+      <WhatsAppButton />
       <StickyMobileCTA />
       <Footer />
     </AuthProvider>

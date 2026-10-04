@@ -9,9 +9,9 @@ export class CreateLeadDto {
   @IsEmail({}, { message: 'Formato de email inválido' })
   email: string;
 
-  @IsNotEmpty({ message: 'El teléfono es obligatorio' })
+  @IsOptional()
   @IsString()
-  phone: string;
+  phone?: string;
 
   @IsOptional()
   @IsString()

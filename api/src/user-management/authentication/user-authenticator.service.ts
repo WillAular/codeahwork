@@ -37,11 +37,13 @@ export class UserAuthenticatorService implements OnModuleInit {
   async authenticate(
     credentials: LoginCredentialsDto,
   ): Promise<AuthenticationResult> {
+    const email = credentials.email.toLowerCase().trim();
     const user = await this.userModel.findOne({
-      where: { email: credentials.email },
+      where: { email },
     });
 
     if (!user || !user.isActive) {
+      this.logger.warn(`Intento de login fallido: usuario no encontrado o inactivo (${email})`);
       throw new UnauthorizedException('Credenciales inválidas o usuario inactivo');
     }
 
@@ -64,33 +66,37 @@ export class UserAuthenticatorService implements OnModuleInit {
   }
 
   private async seedInitialAdminUser(): Promise<void> {
-    const userCount = await this.userModel.count();
-    if (userCount > 0) {
-      return;
-    }
-
-    const adminEmail = this.configService.get<string>(
-      'INITIAL_ADMIN_EMAIL',
-      'admin@codeah.com',
-    );
+    const adminEmail = this.configService
+      .get<string>('INITIAL_ADMIN_EMAIL', 'admin@codeah.com')
+      .toLowerCase();
     const adminPassword = this.configService.get<string>(
       'INITIAL_ADMIN_PASSWORD',
-      'AdminPass123!',
+      'password123',
     );
 
-    const hashedPassword =
-      await this.passwordHasher.hashPassword(adminPassword);
+    const existingAdmin = await this.userModel.findOne({
+      where: { email: adminEmail },
+    });
 
-    await this.userModel.create({
-      name: 'Administrador Inicial',
-      email: adminEmail,
-      password: hashedPassword,
-      role: UserRole.ADMINISTRADOR,
-      isActive: true,
-    } as any);
+    const hashedPassword = await this.passwordHasher.hashPassword(adminPassword);
 
-    this.logger.log(
-      `SuperAdmin inicial creado automáticamente con email: ${adminEmail}`,
-    );
+    if (!existingAdmin) {
+      await this.userModel.create({
+        name: 'Yutcelinis Henríquez',
+        email: adminEmail,
+        password: hashedPassword,
+        role: UserRole.ADMINISTRADOR,
+        isActive: true,
+      } as any);
+
+      this.logger.log(
+        `SuperAdmin inicial creado automáticamente con email: ${adminEmail} y clave: ${adminPassword}`,
+      );
+    } else {
+      // Ensure password matches INITIAL_ADMIN_PASSWORD
+      existingAdmin.password = hashedPassword;
+      await existingAdmin.save();
+      this.logger.log(`SuperAdmin (${adminEmail}) contraseña actualizada a: ${adminPassword}`);
+    }
   }
 }

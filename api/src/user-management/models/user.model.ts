@@ -3,13 +3,12 @@ import {
   DataType,
   Model,
   Table,
-  HasMany,
   Default,
   AllowNull,
   Unique,
 } from 'sequelize-typescript';
 import { UserRole } from './user-role.enum.js';
-import { Project } from '../../project-management/models/project.model.js';
+import type { Project } from '../../project-management/models/project.model.js';
 
 @Table({
   tableName: 'users',
@@ -46,6 +45,5 @@ export class User extends Model<User> {
   @Column(DataType.BOOLEAN)
   declare isActive: boolean;
 
-  @HasMany(() => Project)
-  declare managedProjects: Project[];
+  declare managedProjects?: Project[];
 }

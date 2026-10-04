@@ -13,12 +13,18 @@ export class LeadManagementService {
 
   async create(createLeadDto: CreateLeadDto): Promise<Lead> {
     const newLead = await this.leadModel.create({
-      ...createLeadDto,
+      name: createLeadDto.name.trim(),
+      email: createLeadDto.email.trim().toLowerCase(),
+      phone: createLeadDto.phone?.trim() || 'No especificado',
+      company: createLeadDto.company?.trim() || null,
+      serviceRequested: createLeadDto.serviceRequested || 'General',
+      estimatedBudget: createLeadDto.estimatedBudget || null,
+      message: createLeadDto.message?.trim() || 'Sin mensaje adicional',
       source: createLeadDto.source || 'web_contact_modal',
     } as any);
 
     // Logging for real-time visibility in server logs
-    console.log(`[NUEVO LEAD REGISTRADO] #${newLead.id} - ${newLead.name} (${newLead.email}) - ${newLead.serviceRequested}`);
+    console.log(`[NUEVO LEAD REGISTRADO EN BD] #${newLead.id} - ${newLead.name} (${newLead.email}) - ${newLead.serviceRequested}`);
     return newLead;
   }
 

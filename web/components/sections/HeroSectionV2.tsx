@@ -89,9 +89,6 @@ export function HeroSectionV2() {
           <FadeIn direction="left" delay={0.2} className="lg:col-span-6 relative">
             <div className="relative mx-auto w-full max-w-xl perspective-1000">
 
-              {/* 3D Floating Sphere Decorative Detail */}
-              <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-gradient-to-tr from-[var(--dorado-codeah)] to-amber-200 shadow-xl opacity-90 blur-[1px] animate-float-slow pointer-events-none z-20" />
-
               {/* Main 3D Panel Container */}
               <div className="relative rounded-3xl border border-slate-200/80 bg-white p-4 md:p-6 shadow-2xl shadow-blue-950/15 transform lg:rotate-y-[-6deg] lg:rotate-x-[4deg] transition-transform duration-500 hover:rotate-0">
 

@@ -62,6 +62,7 @@ export default function RootLayout({
     <html lang="es" className={`${sora.variable} ${inter.variable} scroll-smooth`}>
       <head>
         <meta name="color-scheme" content="light" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className="bg-[var(--blanco-calido)] text-[var(--azul-codeah)] antialiased min-h-screen flex flex-col justify-between">
         <MainLayoutWrapper>{children}</MainLayoutWrapper>

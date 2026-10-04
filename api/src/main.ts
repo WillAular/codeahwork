@@ -12,7 +12,11 @@ async function bootstrap(): Promise<void> {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
   app.enableCors({
     origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

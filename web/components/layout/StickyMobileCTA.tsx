@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 import { ContactModal } from "@/components/sections/ContactModal";
 
 export function StickyMobileCTA() {
@@ -23,13 +24,13 @@ export function StickyMobileCTA() {
           </Button>
 
           <a
-            href="https://wa.me/?text=Hola%20Codeah,%20quiero%20consultar%20por%20un%20proyecto"
+            href="https://wa.me/5491136490804?text=Hola%20Codeah,%20quiero%20consultar%20por%20un%20proyecto"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors flex items-center justify-center shrink-0"
+            className="p-3 bg-[#25D366] text-white rounded-xl hover:bg-emerald-600 transition-colors flex items-center justify-center shrink-0 shadow-sm"
             aria-label="Contactar por WhatsApp"
           >
-            <MessageSquare className="w-5 h-5" />
+            <IconBrandWhatsapp className="w-6 h-6" />
           </a>
         </div>
       </div>
