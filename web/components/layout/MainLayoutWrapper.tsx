@@ -8,6 +8,7 @@ import { StickyMobileCTA } from "@/components/layout/StickyMobileCTA";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { ScrollProgressBar } from "@/components/ui/fade-in";
 import { AuthProvider } from "@/context/AuthContext";
+import { AdminThemeProvider } from "@/context/AdminThemeContext";
 
 export function MainLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -16,9 +17,11 @@ export function MainLayoutWrapper({ children }: { children: React.ReactNode }) {
   if (isAdmin) {
     return (
       <AuthProvider>
-        <div className="min-h-screen bg-slate-950 text-slate-100 font-inter antialiased">
-          {children}
-        </div>
+        <AdminThemeProvider>
+          <div className="min-h-screen font-inter antialiased">
+            {children}
+          </div>
+        </AdminThemeProvider>
       </AuthProvider>
     );
   }

@@ -24,6 +24,12 @@ export class LeadManagementController {
     return this.leadService.create(createLeadDto);
   }
 
+  @Post('test-email')
+  @HttpCode(HttpStatus.OK)
+  testEmail(@Body('email') email?: string) {
+    return this.leadService.testEmail(email);
+  }
+
   @Get()
   findAll() {
     return this.leadService.findAll();
