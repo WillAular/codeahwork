@@ -14,7 +14,7 @@ services:
       - "3000:3000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.codeah-web.rule=Host(`${DOMAIN:-codeah.com}`) || Host(`www.${DOMAIN:-codeah.com}`)"
+      - "traefik.http.routers.codeah-web.rule=Host(`${DOMAIN:-codeah.com.ar}`) || Host(`www.${DOMAIN:-codeah.com.ar}`)"
       - "traefik.http.routers.codeah-web.entrypoints=websecure"
       - "traefik.http.routers.codeah-web.tls=true"
       - "traefik.http.routers.codeah-web.tls.certresolver=letsencrypt"

@@ -2,19 +2,19 @@
 # 1. Builder stage (Node 24 Alpine)
 # ==========================================
 FROM node:24-alpine AS builder
-RUN apk add --no-cache libc6-compat python3 make g++
+RUN apk add --no-cache libc6-compat
 RUN npm install -g pnpm@latest
 WORKDIR /app
 
 # Cache package dependencies
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # Copy source and build
 COPY . .
 RUN pnpm build
 
-# Prune devDependencies to keep image lean
+# Prune devDependencies to keep production image lean
 RUN pnpm prune --prod
 
 # ==========================================
