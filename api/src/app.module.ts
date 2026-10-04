@@ -4,6 +4,7 @@ import { DatabaseModule } from './database/database.module.js';
 import { UserManagementModule } from './user-management/user-management.module.js';
 import { ProjectManagementModule } from './project-management/project-management.module.js';
 import { LeadManagementModule } from './lead-management/lead-management.module.js';
+import { HealthController } from './health/health.controller.js';
 
 @Module({
   imports: [
@@ -16,5 +17,6 @@ import { LeadManagementModule } from './lead-management/lead-management.module.j
     ProjectManagementModule,
     LeadManagementModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}

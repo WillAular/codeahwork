@@ -1,0 +1,36 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.codeah.com/api}
+    image: codeah-web:latest
+    container_name: codeah_web
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-3000}
+      - HOSTNAME=0.0.0.0
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://api.codeah.com/api}
+      - VIRTUAL_HOST=${DOMAIN:-codeah.com},www.${DOMAIN:-codeah.com}
+      - LETSENCRYPT_HOST=${DOMAIN:-codeah.com},www.${DOMAIN:-codeah.com}
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.codeah-web.rule=Host(`${DOMAIN:-codeah.com}`) || Host(`www.${DOMAIN:-codeah.com}`)"
+      - "traefik.http.routers.codeah-web.entrypoints=websecure"
+      - "traefik.http.routers.codeah-web.tls=true"
+      - "traefik.http.routers.codeah-web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.codeah-web.loadbalancer.server.port=${PORT:-3000}"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M

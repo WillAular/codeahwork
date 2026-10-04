@@ -17,8 +17,11 @@ async function bootstrap(): Promise<void> {
       crossOriginResourcePolicy: { policy: 'cross-origin' },
     }),
   );
+  const corsOrigin = configService.get<string>('CORS_ORIGIN');
   app.enableCors({
-    origin: true,
+    origin: corsOrigin
+      ? corsOrigin.split(',').map((o) => o.trim())
+      : true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });

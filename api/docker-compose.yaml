@@ -1,0 +1,27 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: codeah-api:latest
+    container_name: codeah_api
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${PORT:-5003}:${PORT:-5003}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.codeah-api.rule=Host(`${DOMAIN:-api.codeah.com}`)"
+      - "traefik.http.routers.codeah-api.entrypoints=websecure"
+      - "traefik.http.routers.codeah-api.tls=true"
+      - "traefik.http.routers.codeah-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.codeah-api.loadbalancer.server.port=${PORT:-5003}"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M

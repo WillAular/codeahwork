@@ -99,7 +99,7 @@ export default function ClientPortalPage() {
   const handleRefresh = async () => {
     setLoading(true);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5003/api";
       const res = await fetch(`${apiUrl}/projects/${projectCode}/status`);
       if (res.ok) {
         const data = await res.json();
